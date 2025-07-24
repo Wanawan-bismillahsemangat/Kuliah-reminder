@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Jadwal Kuliah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  function confirmDelete(id) {
+    if (confirm('Yakin ingin menghapus data ini?')) {
+      window.location.href = '/jadwal/hapus/' + id;
+    }
+  }
+</script>
+
+</head>
+<body class="bg-gray-900 text-white font-sans min-h-screen px-6 py-10">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+  <div>
+    <h1 class="text-4xl font-bold text-teal-400">📅 Jadwal Kuliah</h1>
+    <p class="text-teal-200 mt-2">Halo Yang Rajin Ya Kuliahnya ka, <span th:text="${username}">User</span>!</p>
+  </div>
+  
+  <form th:action="@{/logout}" method="post">
+    <button
+      type="submit"
+      class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-300 shadow-md"
+    >
+      🚪 Logout
+    </button>
+  </form>
+</div>
+
+
+  <!-- Jadwal Table -->
+  <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-10 overflow-x-auto">
+    <table class="w-full text-left">
+      <thead class="bg-gray-700 text-teal-300 uppercase text-sm">
+        <tr>
+          <th class="px-4 py-2">Mata Kuliah</th>
+          <th class="px-4 py-2">Hari</th>
+          <th class="px-4 py-2">Jam</th>
+          <th class="px-4 py-2">Ruangan</th>
+          <th class="px-4 py-2">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          th:each="jadwal : ${jadwalList}"
+          class="border-b border-gray-600 hover:bg-gray-700 transition duration-300"
+        >
+          <td class="px-4 py-2" th:text="${jadwal.mataKuliah}">Pemrograman</td>
+          <td class="px-4 py-2" th:text="${jadwal.hari}">Senin</td>
+          <td class="px-4 py-2" th:text="${jadwal.jam}">08:00</td>
+          <td class="px-4 py-2" th:text="${jadwal.ruangan}">Ruang A</td>
+          <td class="px-4 py-2 flex space-x-2">
+            <a th:href="@{'/jadwal/edit/' + ${jadwal.id}}"
+              class="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition-all duration-300">✏️
+              Edit</a>
+            <form th:action="@{'/jadwal/hapus/' + ${jadwal.id}}" method="post" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+             <button type="submit"
+              class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-all duration-300">
+              🗑️ Hapus
+            </button>
+</form>
+
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Form Tambah Jadwal -->
+  <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+    <h2 class="text-xl text-teal-300 font-semibold mb-4">➕ Tambah Jadwal</h2>
+    <form th:action="@{/jadwal/tambah}" th:object="${jadwalBaru}" method="post" class="grid gap-4 md:grid-cols-2">
+      <input type="text" th:field="*{mataKuliah}" placeholder="Mata Kuliah"
+        class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+      <input type="text" th:field="*{hari}" placeholder="Hari"
+        class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+      <input type="time" th:field="*{jam}"
+        class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+      <input type="text" th:field="*{ruangan}" placeholder="Ruangan"
+        class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+      <div class="md:col-span-2">
+        <button type="submit"
+          class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded transition duration-300 shadow-md">
+          ✅ Simpan Jadwal
+        </button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

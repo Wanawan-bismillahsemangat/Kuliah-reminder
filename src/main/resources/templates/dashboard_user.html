@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Mahasiswa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            float: "float 3s ease-in-out infinite",
+            flicker: "flicker 2s infinite",
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            flicker: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.4' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white min-h-screen font-mono px-6 py-10">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10 animate-fade-in">
+    <div>
+      <h1 class="text-4xl font-extrabold text-cyan-400 animate-flicker">📘 Jadwal Kuliah</h1>
+      <p class="text-cyan-200 mt-2">Selamat datang, <span class="text-yellow-300 font-semibold" th:text="${username}">User</span> 👋</p>
+      <p class="text-sm text-gray-400 italic">Lihat jadwal yang telah disusun oleh dosen tersayang</p>
+    </div>
+    <form th:action="@{/logout}" method="post">
+      <button
+        type="submit"
+        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all duration-300 shadow-lg"
+      >
+        🔒 Logout
+      </button>
+    </form>
+  </div>
+
+  <!-- Jadwal Table -->
+  <div class="bg-gray-800 p-6 rounded-xl shadow-2xl border border-cyan-700 backdrop-blur-lg bg-opacity-90 animate-fade-in-down">
+    <table class="w-full text-left table-auto border-separate border-spacing-y-3">
+      <thead class="bg-cyan-700 text-white rounded-lg">
+        <tr>
+          <th class="px-4 py-2 rounded-l-lg">📘 Mata Kuliah</th>
+          <th class="px-4 py-2">📅 Hari</th>
+          <th class="px-4 py-2">⏰ Jam</th>
+          <th class="px-4 py-2 rounded-r-lg">🏛️ Ruangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          th:each="jadwal : ${jadwalList}"
+          class="bg-gray-700 hover:bg-gray-600 transition duration-300 text-white rounded-lg shadow-md"
+        >
+          <td class="px-4 py-2 rounded-l-lg" th:text="${jadwal.mataKuliah}">Pemrograman</td>
+          <td class="px-4 py-2" th:text="${jadwal.hari}">Senin</td>
+          <td class="px-4 py-2" th:text="${jadwal.jam}">08:00</td>
+          <td class="px-4 py-2 rounded-r-lg" th:text="${jadwal.ruangan}">Ruang A</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Animasi Bawah -->
+  <div class="mt-20 text-center animate-fade-in-up">
+    <p class="text-gray-500 text-sm italic animate-float">Semangat kuliahnya ✨📖</p>
+  </div>
+
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in-down {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in { animation: fade-in 1s ease-out; }
+    .animate-fade-in-down { animation: fade-in-down 1s ease-out; }
+    .animate-fade-in-up { animation: fade-in-up 1.2s ease-out; }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+<script>
+  const socket = new SockJS('/ws');
+  const stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, function (frame) {
+    console.log('🔌 Connected: ' + frame);
+
+    stompClient.subscribe('/topic/jadwal', function (message) {
+      const jadwal = JSON.parse(message.body);
+      alert(`⏰ Jadwal '${jadwal.mataKuliah}' dimulai pukul ${jadwal.jam} di ${jadwal.ruangan}`);
+    });
+  });
+</script>
+
+
+</body>
+</html>

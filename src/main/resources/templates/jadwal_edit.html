@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Jadwal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen p-10">
+
+  <div class="max-w-xl mx-auto bg-gray-800 p-8 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-teal-400 mb-6 text-center">✏️ Edit Jadwal</h2>
+    <form th:action="@{/jadwal/update}" th:object="${jadwal}" method="post" class="grid gap-4">
+      <input type="hidden" th:field="*{id}" />
+      <input type="text" th:field="*{mataKuliah}" placeholder="Mata Kuliah"
+        class="px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-teal-500" />
+      <input type="text" th:field="*{hari}" placeholder="Hari"
+        class="px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-teal-500" />
+      <input type="time" th:field="*{jam}"
+        class="px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-teal-500" />
+      <input type="text" th:field="*{ruangan}" placeholder="Ruangan"
+        class="px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-teal-500" />
+      <button type="submit"
+        class="w-full bg-teal-500 hover:bg-teal-600 py-2 rounded text-white font-semibold transition duration-300">
+        💾 Simpan Perubahan
+      </button>
+    </form>
+    <div class="mt-4 text-center">
+      <a th:href="@{/jadwal}" class="text-sm text-teal-300 hover:underline">⬅️ Kembali ke Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>
